@@ -1,7 +1,8 @@
 import random
 import pygame
 import os
-from levels import Level_Gen
+from levels import *
+from Player import *
 
 print("hello World")
 
@@ -29,7 +30,6 @@ WORLD_DATA = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-PLAYER = pygame.image.load(os.path.join('imgs', 'player.png'))
 
 
 class World():
@@ -37,17 +37,17 @@ class World():
 
         self.tile_list = []
         wall_list = [
-        pygame.transform.scale2x(walls[0]),
-        pygame.transform.scale2x(walls[1]),
-        pygame.transform.scale2x(walls[2]),
-        pygame.transform.scale2x(walls[3])]
+            pygame.transform.scale2x(walls[0]),
+            pygame.transform.scale2x(walls[1]),
+            pygame.transform.scale2x(walls[2]),
+            pygame.transform.scale2x(walls[3])]
 
         row_count = 0
         for row in data:
             col_count = 0
             for tile in row:
                 if tile == 1:
-                    temp = random.randint(0,3)
+                    temp = random.randint(0, 3)
                     wall1_rect = wall_list[temp].get_rect()
                     wall1_rect.x = col_count*TILE_SIZE
                     wall1_rect.y = row_count*TILE_SIZE
@@ -61,41 +61,21 @@ class World():
             WINDOW.blit(tile[0], tile[1])
 
 
+PLAYER = Player(WORLD_DATA)
+
+
 def draw_window(rect):
     WINDOW.fill((134, 78, 90))
     WORLD.draw()
-    WINDOW.blit(PLAYER, (rect.x, rect.y))
+    WINDOW.blit(PLAYER.get_img(), (PLAYER.get_rect().x, PLAYER.get_rect().y))
     pygame.display.update()
-
-
-def movement(key, rect):
-    for tile in WORLD.tile_list:
-        if key[pygame.K_w] and not rect.colliderect(tile[1].x, tile[1].y + 1, tile[1].width, tile[1].height):
-            rect.y -= VEL
-        if key[pygame.K_a] and not rect.colliderect(tile[1].x + VEL, tile[1].y, tile[1].width, tile[1].height):
-            rect.x -= VEL
-        if key[pygame.K_s] and not rect.colliderect(tile[1].x, tile[1].y - 1, tile[1].width, tile[1].height):
-            rect.y += VEL
-        if key[pygame.K_d] and not rect.colliderect(tile[1].x - VEL, tile[1].y, tile[1].width, tile[1].height):
-            rect.x += VEL
 
 
 WORLD = World(WORLD_DATA)
 
 
 def main():
-    player_rect = pygame.Rect(0, 0, 32, 32)
-    row_count = 0
-    for row in WORLD_DATA:
-        col_count = 0
-        for col in row:
-            if col == 10:
-                player_rect = pygame.Rect(
-                    row_count*TILE_SIZE, col_count*TILE_SIZE, 32, 32)
-            col_count += 1
-        row_count += 1
 
-    wall_rect = pygame.Rect(100, 100, 32, 32)
     clock = pygame.time.Clock()
 
     running = True
@@ -106,8 +86,8 @@ def main():
                 running = False
         keys_pressed = pygame.key.get_pressed()
 
-        movement(keys_pressed, player_rect)
-        draw_window(player_rect)
+        PLAYER.movement(keys_pressed)
+        draw_window(PLAYER.get_rect())
 
     pygame.quit()
 
