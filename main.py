@@ -17,7 +17,8 @@ walls = [pygame.image.load(os.path.join('imgs', 'walls', 'wall1.png')),
          pygame.image.load(os.path.join('imgs', 'walls', 'wall4.png'))]
 
 
-WORLD_DATA = Level_Gen(random.randint(1,2)).getWorld()
+WORLD_DATA = Level_Gen(random.randint(1,2))
+WORLD_DATA = WORLD_DATA.getWorld()
 PLAYER = pygame.image.load(os.path.join('imgs', 'player.png'))
 
 
@@ -67,13 +68,11 @@ class World():
             WINDOW.blit(tile[0], tile[1])
 
 
-
 def draw_window(rect):
     WINDOW.fill((134, 78, 90))
     WORLD.draw()
     WINDOW.blit(PLAYER, (rect.x, rect.y))
     pygame.display.update()
-
 
 
 def movement(key, rect):
@@ -92,13 +91,14 @@ WORLD = World(WORLD_DATA)
 
 
 def main():
-    player_rect = pygame.Rect(0,0,0,0)
+    player_rect = pygame.Rect(0, 0, 32, 32)
     row_count = 0
     for row in WORLD_DATA:
         col_count = 0
         for col in row:
             if col == 10:
-                player_rect = pygame.Rect(row_count*TILE_SIZE, col_count*TILE_SIZE, 32, 32)
+                player_rect = pygame.Rect(
+                    row_count*TILE_SIZE, col_count*TILE_SIZE, 32, 32)
             col_count += 1
         row_count += 1
 
