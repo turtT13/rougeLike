@@ -17,8 +17,18 @@ walls = [pygame.image.load(os.path.join('imgs', 'walls', 'wall1.png')),
          pygame.image.load(os.path.join('imgs', 'walls', 'wall4.png'))]
 
 
-WORLD_DATA = Level_Gen(random.randint(1,2))
-WORLD_DATA = WORLD_DATA.getWorld()
+WORLD_DATA = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 PLAYER = pygame.image.load(os.path.join('imgs', 'player.png'))
 
 
@@ -26,39 +36,22 @@ class World():
     def __init__(self, data):
 
         self.tile_list = []
-
-        wall1 = pygame.transform.scale2x(walls[0])
-        wall2 = pygame.transform.scale2x(walls[1])
-        wall3 = pygame.transform.scale2x(walls[2])
-        wall4 = pygame.transform.scale2x(walls[3])
+        wall_list = [
+        pygame.transform.scale2x(walls[0]),
+        pygame.transform.scale2x(walls[1]),
+        pygame.transform.scale2x(walls[2]),
+        pygame.transform.scale2x(walls[3])]
 
         row_count = 0
         for row in data:
             col_count = 0
             for tile in row:
                 if tile == 1:
-                    wall1_rect = wall1.get_rect()
+                    temp = random.randint(0,3)
+                    wall1_rect = wall_list[temp].get_rect()
                     wall1_rect.x = col_count*TILE_SIZE
                     wall1_rect.y = row_count*TILE_SIZE
-                    tile = (wall1, wall1_rect)
-                    self.tile_list.append(tile)
-                if tile == 2:
-                    wall2_rect = wall2.get_rect()
-                    wall2_rect.x = col_count*TILE_SIZE
-                    wall2_rect.y = row_count*TILE_SIZE
-                    tile = (wall2, wall2_rect)
-                    self.tile_list.append(tile)
-                if tile == 3:
-                    wall3_rect = wall3.get_rect()
-                    wall3_rect.x = col_count*TILE_SIZE
-                    wall3_rect.y = row_count*TILE_SIZE
-                    tile = (wall3, wall3_rect)
-                    self.tile_list.append(tile)
-                if tile == 4:
-                    wall4_rect = wall4.get_rect()
-                    wall4_rect.x = col_count*TILE_SIZE
-                    wall4_rect.y = row_count*TILE_SIZE
-                    tile = (wall4, wall4_rect)
+                    tile = (wall_list[temp], wall1_rect)
                     self.tile_list.append(tile)
                 col_count += 1
             row_count += 1
@@ -77,7 +70,7 @@ def draw_window(rect):
 
 def movement(key, rect):
     for tile in WORLD.tile_list:
-        if key[pygame.K_w] and not tile[1].colliderect(rect.x, rect.y - VEL, rect.width, rect.height):
+        if key[pygame.K_w] and not pygame.sprite.collide_rect(tile[1], rect):
             rect.y -= VEL
         if key[pygame.K_a] and not tile[1].colliderect(rect.x - VEL, rect.y, rect.width, rect.height):
             rect.x -= VEL
