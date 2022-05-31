@@ -33,7 +33,7 @@ WORLD_DATA = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 
 
 class World():
-    def __init__(self, data):
+    def __init__(self, data, tile_size):
 
         self.tile_list = []
         wall_list = [
@@ -47,11 +47,12 @@ class World():
             col_count = 0
             for tile in row:
                 if tile == 1:
-                    temp = random.randint(0, 3)
-                    wall1_rect = wall_list[temp].get_rect()
-                    wall1_rect.x = col_count*TILE_SIZE
-                    wall1_rect.y = row_count*TILE_SIZE
-                    tile = (wall_list[temp], wall1_rect)
+                    temp = random.randint(0,3)
+                    img = pygame.transform.scale(wall_list[temp], (tile_size, tile_size))
+                    img_rect = img.get_rect()
+                    img_rect.x = col_count*tile_size
+                    img_rect.y = row_count*tile_size
+                    tile = (img, img_rect)
                     self.tile_list.append(tile)
                 col_count += 1
             row_count += 1
@@ -63,7 +64,6 @@ class World():
 
 PLAYER = Player(WORLD_DATA)
 
-
 def draw_window(rect):
     WINDOW.fill((134, 78, 90))
     WORLD.draw()
@@ -71,8 +71,12 @@ def draw_window(rect):
     pygame.display.update()
 
 
-WORLD = World(WORLD_DATA)
-
+WORLD = World(WORLD_DATA, TILE_SIZE)
+print(WORLD.tile_list)
+def wall_collide(world, player):
+    for tile in world:
+        if player.colliderect(tile[1]):
+            return False
 
 def main():
 
@@ -88,6 +92,8 @@ def main():
 
         PLAYER.movement(keys_pressed)
         draw_window(PLAYER.get_rect())
+        if keys_pressed[pygame.K_v]:
+            running = wall_collide(WORLD.tile_list, PLAYER.get_rect())
 
     pygame.quit()
 
