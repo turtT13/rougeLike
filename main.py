@@ -23,7 +23,7 @@ WORLD_DATA = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -70,13 +70,13 @@ def draw_window(rect):
 
 def movement(key, rect):
     for tile in WORLD.tile_list:
-        if key[pygame.K_w] and not pygame.sprite.collide_rect(tile[1], rect):
+        if key[pygame.K_w] and not rect.colliderect(tile[1].x, tile[1].y + 1, tile[1].width, tile[1].height):
             rect.y -= VEL
-        if key[pygame.K_a] and not tile[1].colliderect(rect.x - VEL, rect.y, rect.width, rect.height):
+        if key[pygame.K_a] and not rect.colliderect(tile[1].x + VEL, tile[1].y, tile[1].width, tile[1].height):
             rect.x -= VEL
-        if key[pygame.K_s] and not tile[1].colliderect(rect.x, rect.y + VEL, rect.width, rect.height):
+        if key[pygame.K_s] and not rect.colliderect(tile[1].x, tile[1].y - 1, tile[1].width, tile[1].height):
             rect.y += VEL
-        if key[pygame.K_d] and not tile[1].colliderect(rect.x + VEL, rect.y, rect.width, rect.height):
+        if key[pygame.K_d] and not rect.colliderect(tile[1].x - VEL, tile[1].y, tile[1].width, tile[1].height):
             rect.x += VEL
 
 
