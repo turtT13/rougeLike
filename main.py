@@ -4,8 +4,6 @@ import os
 from levels import *
 from Player import *
 
-print("hello World")
-
 WIDTH, HEIGHT = 768, 768
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("drogen")
@@ -22,9 +20,9 @@ WORLD_DATA = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -72,11 +70,6 @@ def draw_window(rect):
 
 
 WORLD = World(WORLD_DATA, TILE_SIZE)
-print(WORLD.tile_list)
-def wall_collide(world, player):
-    for tile in world:
-        if player.colliderect(tile[1]):
-            return False
 
 def main():
 
@@ -89,11 +82,8 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
         keys_pressed = pygame.key.get_pressed()
-
-        PLAYER.movement(keys_pressed)
+        PLAYER.movement(keys_pressed, WORLD.tile_list)
         draw_window(PLAYER.get_rect())
-        if keys_pressed[pygame.K_v]:
-            running = wall_collide(WORLD.tile_list, PLAYER.get_rect())
 
     pygame.quit()
 
